@@ -39,11 +39,15 @@ export const TableContainer = () => {
   }, [data, currentPage, totalPages]);
 
   if (error) {
-    return <div>Something went wrong</div>;
+    return <div role="alert">Something went wrong</div>;
   }
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div role="status" aria-live="polite">
+        Loading...
+      </div>
+    );
   }
 
   return (
