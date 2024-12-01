@@ -21,22 +21,22 @@ export const TableContainer = () => {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentData = data.slice(indexOfFirstItem, indexOfLastItem);
 
-  const totalPages = Math.ceil(data.length / itemsPerPage);
+  const totalPages = data.length ? Math.ceil(data.length / itemsPerPage) : 0;
 
   const handlePageChange = (newPage) => {
+    if (newPage < 1) newPage = 1;
+    if (newPage > totalPages) newPage = totalPages;
     setCurrentPage(newPage);
-    // Update the URL with the new page number without reloading the page
     window.history.pushState({}, '', `?page=${newPage}`);
   };
+
   useEffect(() => {
-    const newPage = getQueryParams();
-    if (newPage !== currentPage) {
-      setCurrentPage(newPage);
+    if (data.length) {
+      const newPage = getQueryParams();
+      const validPage = Math.min(Math.max(newPage, 1), totalPages);
+      handlePageChange(validPage);
     }
-    if (newPage > totalPages) {
-      handlePageChange(1);
-    }
-  }, [data, currentPage, totalPages]);
+  }, [currentPage, totalPages]);
 
   if (error) {
     return <div role="alert">Something went wrong</div>;
